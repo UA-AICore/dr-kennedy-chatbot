@@ -510,7 +510,7 @@
 			}
 		} else {
 			// Redirect to /error when Backend Not Detected
-			await goto(`/error`);
+			await goto(`/chat/error`);
 		}
 
 		await tick();
