@@ -18,7 +18,7 @@ def post_webhook(url: str, message: str, event_data: dict) -> bool:
         if "https://hooks.slack.com" in url or "https://chat.googleapis.com" in url:
             payload["text"] = message
         # Discord Webhooks
-        elif "https://discord.com/api/webhooks" in url:
+        elif "https://discord.com/chat/api/webhooks" in url:
             payload["content"] = (
                 message
                 if len(message) < 2000

@@ -332,7 +332,7 @@ export const verifyOpenAIConnection = async (
 export const chatCompletion = async (
 	token: string = '',
 	body: object,
-	url: string = `${WEBUI_BASE_URL}/api`
+	url: string = `${WEBUI_BASE_URL}/chat/api`
 ): Promise<[Response | null, AbortController]> => {
 	const controller = new AbortController();
 	let error = null;
@@ -361,7 +361,7 @@ export const chatCompletion = async (
 export const generateOpenAIChatCompletion = async (
 	token: string = '',
 	body: object,
-	url: string = `${WEBUI_BASE_URL}/api`
+	url: string = `${WEBUI_BASE_URL}/chat/api`
 ) => {
 	let error = null;
 

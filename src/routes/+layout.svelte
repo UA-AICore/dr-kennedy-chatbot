@@ -61,7 +61,7 @@
 			reconnectionDelay: 1000,
 			reconnectionDelayMax: 5000,
 			randomizationFactor: 0.5,
-			path: '/ws/socket.io',
+			path: '/chat/ws/socket.io',
 			transports: enableWebsocket ? ['websocket'] : ['polling', 'websocket'],
 			auth: { token: localStorage.token }
 		});
@@ -498,13 +498,13 @@
 					} else {
 						// Redirect Invalid Session User to /auth Page
 						localStorage.removeItem('token');
-            redirectWebAuth()
+						redirectWebAuth();
 					}
 				} else {
 					// Don't redirect if we're already on the auth page
 					// Needed because we pass in tokens from OAuth logins via URL fragments
 					if ($page.url.pathname !== '/auth') {
-            redirectWebAuth()
+						redirectWebAuth();
 					}
 				}
 			}

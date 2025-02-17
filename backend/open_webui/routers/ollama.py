@@ -190,7 +190,7 @@ async def verify_connection(
     ) as session:
         try:
             async with session.get(
-                f"{url}/api/version",
+                f"{url}/chat/api/version",
                 headers={**({"Authorization": f"Bearer {key}"} if key else {})},
             ) as r:
                 if r.status != 200:
@@ -275,7 +275,7 @@ async def get_all_models(request: Request):
                 key = api_config.get("key", None)
 
                 if enable:
-                    request_tasks.append(send_get_request(f"{url}/api/tags", key))
+                    request_tasks.append(send_get_request(f"{url}/chat/api/tags", key))
                 else:
                     request_tasks.append(asyncio.ensure_future(asyncio.sleep(0, None)))
 
@@ -352,8 +352,8 @@ async def get_filtered_models(models, user):
     return filtered_models
 
 
-@router.get("/api/tags")
-@router.get("/api/tags/{url_idx}")
+@router.get("/chat/api/tags")
+@router.get("/chat/api/tags/{url_idx}")
 async def get_ollama_tags(
     request: Request, url_idx: Optional[int] = None, user=Depends(get_verified_user)
 ):
@@ -369,7 +369,7 @@ async def get_ollama_tags(
         try:
             r = requests.request(
                 method="GET",
-                url=f"{url}/api/tags",
+                url=f"{url}/chat/api/tags",
                 headers={**({"Authorization": f"Bearer {key}"} if key else {})},
             )
             r.raise_for_status()
@@ -398,15 +398,15 @@ async def get_ollama_tags(
     return models
 
 
-@router.get("/api/version")
-@router.get("/api/version/{url_idx}")
+@router.get("/chat/api/version")
+@router.get("/chat/api/version/{url_idx}")
 async def get_ollama_versions(request: Request, url_idx: Optional[int] = None):
     if request.app.state.config.ENABLE_OLLAMA_API:
         if url_idx is None:
             # returns lowest version
             request_tasks = [
                 send_get_request(
-                    f"{url}/api/version",
+                    f"{url}/chat/api/version",
                     request.app.state.config.OLLAMA_API_CONFIGS.get(
                         str(idx),
                         request.app.state.config.OLLAMA_API_CONFIGS.get(
@@ -438,7 +438,7 @@ async def get_ollama_versions(request: Request, url_idx: Optional[int] = None):
 
             r = None
             try:
-                r = requests.request(method="GET", url=f"{url}/api/version")
+                r = requests.request(method="GET", url=f"{url}/chat/api/version")
                 r.raise_for_status()
 
                 return r.json()
@@ -462,7 +462,7 @@ async def get_ollama_versions(request: Request, url_idx: Optional[int] = None):
         return {"version": False}
 
 
-@router.get("/api/ps")
+@router.get("/chat/api/ps")
 async def get_ollama_loaded_models(request: Request, user=Depends(get_verified_user)):
     """
     List models that are currently loaded into Ollama memory, and which node they are loaded on.
@@ -470,7 +470,7 @@ async def get_ollama_loaded_models(request: Request, user=Depends(get_verified_u
     if request.app.state.config.ENABLE_OLLAMA_API:
         request_tasks = [
             send_get_request(
-                f"{url}/api/ps",
+                f"{url}/chat/api/ps",
                 request.app.state.config.OLLAMA_API_CONFIGS.get(
                     str(idx),
                     request.app.state.config.OLLAMA_API_CONFIGS.get(
@@ -491,8 +491,8 @@ class ModelNameForm(BaseModel):
     name: str
 
 
-@router.post("/api/pull")
-@router.post("/api/pull/{url_idx}")
+@router.post("/chat/api/pull")
+@router.post("/chat/api/pull/{url_idx}")
 async def pull_model(
     request: Request,
     form_data: ModelNameForm,
@@ -506,7 +506,7 @@ async def pull_model(
     payload = {**form_data.model_dump(exclude_none=True), "insecure": True}
 
     return await send_post_request(
-        url=f"{url}/api/pull",
+        url=f"{url}/chat/api/pull",
         payload=json.dumps(payload),
         key=get_api_key(url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS),
     )
@@ -518,8 +518,8 @@ class PushModelForm(BaseModel):
     stream: Optional[bool] = None
 
 
-@router.delete("/api/push")
-@router.delete("/api/push/{url_idx}")
+@router.delete("/chat/api/push")
+@router.delete("/chat/api/push/{url_idx}")
 async def push_model(
     request: Request,
     form_data: PushModelForm,
@@ -542,7 +542,7 @@ async def push_model(
     log.debug(f"url: {url}")
 
     return await send_post_request(
-        url=f"{url}/api/push",
+        url=f"{url}/chat/api/push",
         payload=form_data.model_dump_json(exclude_none=True).encode(),
         key=get_api_key(url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS),
     )
@@ -556,8 +556,8 @@ class CreateModelForm(BaseModel):
     model_config = ConfigDict(extra="allow")
 
 
-@router.post("/api/create")
-@router.post("/api/create/{url_idx}")
+@router.post("/chat/api/create")
+@router.post("/chat/api/create/{url_idx}")
 async def create_model(
     request: Request,
     form_data: CreateModelForm,
@@ -568,7 +568,7 @@ async def create_model(
     url = request.app.state.config.OLLAMA_BASE_URLS[url_idx]
 
     return await send_post_request(
-        url=f"{url}/api/create",
+        url=f"{url}/chat/api/create",
         payload=form_data.model_dump_json(exclude_none=True).encode(),
         key=get_api_key(url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS),
     )
@@ -579,8 +579,8 @@ class CopyModelForm(BaseModel):
     destination: str
 
 
-@router.post("/api/copy")
-@router.post("/api/copy/{url_idx}")
+@router.post("/chat/api/copy")
+@router.post("/chat/api/copy/{url_idx}")
 async def copy_model(
     request: Request,
     form_data: CopyModelForm,
@@ -605,7 +605,7 @@ async def copy_model(
     try:
         r = requests.request(
             method="POST",
-            url=f"{url}/api/copy",
+            url=f"{url}/chat/api/copy",
             headers={
                 "Content-Type": "application/json",
                 **({"Authorization": f"Bearer {key}"} if key else {}),
@@ -634,8 +634,8 @@ async def copy_model(
         )
 
 
-@router.delete("/api/delete")
-@router.delete("/api/delete/{url_idx}")
+@router.delete("/chat/api/delete")
+@router.delete("/chat/api/delete/{url_idx}")
 async def delete_model(
     request: Request,
     form_data: ModelNameForm,
@@ -660,7 +660,7 @@ async def delete_model(
     try:
         r = requests.request(
             method="DELETE",
-            url=f"{url}/api/delete",
+            url=f"{url}/chat/api/delete",
             data=form_data.model_dump_json(exclude_none=True).encode(),
             headers={
                 "Content-Type": "application/json",
@@ -689,7 +689,7 @@ async def delete_model(
         )
 
 
-@router.post("/api/show")
+@router.post("/chat/api/show")
 async def show_model_info(
     request: Request, form_data: ModelNameForm, user=Depends(get_verified_user)
 ):
@@ -710,7 +710,7 @@ async def show_model_info(
     try:
         r = requests.request(
             method="POST",
-            url=f"{url}/api/show",
+            url=f"{url}/chat/api/show",
             headers={
                 "Content-Type": "application/json",
                 **({"Authorization": f"Bearer {key}"} if key else {}),
@@ -746,8 +746,8 @@ class GenerateEmbedForm(BaseModel):
     keep_alive: Optional[Union[int, str]] = None
 
 
-@router.post("/api/embed")
-@router.post("/api/embed/{url_idx}")
+@router.post("/chat/api/embed")
+@router.post("/chat/api/embed/{url_idx}")
 async def embed(
     request: Request,
     form_data: GenerateEmbedForm,
@@ -779,7 +779,7 @@ async def embed(
     try:
         r = requests.request(
             method="POST",
-            url=f"{url}/api/embed",
+            url=f"{url}/chat/api/embed",
             headers={
                 "Content-Type": "application/json",
                 **({"Authorization": f"Bearer {key}"} if key else {}),
@@ -815,8 +815,8 @@ class GenerateEmbeddingsForm(BaseModel):
     keep_alive: Optional[Union[int, str]] = None
 
 
-@router.post("/api/embeddings")
-@router.post("/api/embeddings/{url_idx}")
+@router.post("/chat/api/embeddings")
+@router.post("/chat/api/embeddings/{url_idx}")
 async def embeddings(
     request: Request,
     form_data: GenerateEmbeddingsForm,
@@ -848,7 +848,7 @@ async def embeddings(
     try:
         r = requests.request(
             method="POST",
-            url=f"{url}/api/embeddings",
+            url=f"{url}/chat/api/embeddings",
             headers={
                 "Content-Type": "application/json",
                 **({"Authorization": f"Bearer {key}"} if key else {}),
@@ -892,8 +892,8 @@ class GenerateCompletionForm(BaseModel):
     keep_alive: Optional[Union[int, str]] = None
 
 
-@router.post("/api/generate")
-@router.post("/api/generate/{url_idx}")
+@router.post("/chat/api/generate")
+@router.post("/chat/api/generate/{url_idx}")
 async def generate_completion(
     request: Request,
     form_data: GenerateCompletionForm,
@@ -928,7 +928,7 @@ async def generate_completion(
         form_data.model = form_data.model.replace(f"{prefix_id}.", "")
 
     return await send_post_request(
-        url=f"{url}/api/generate",
+        url=f"{url}/chat/api/generate",
         payload=form_data.model_dump_json(exclude_none=True).encode(),
         key=get_api_key(url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS),
     )
@@ -965,8 +965,8 @@ async def get_ollama_url(request: Request, model: str, url_idx: Optional[int] = 
     return url, url_idx
 
 
-@router.post("/api/chat")
-@router.post("/api/chat/{url_idx}")
+@router.post("/chat/api/chat")
+@router.post("/chat/api/chat/{url_idx}")
 async def generate_chat_completion(
     request: Request,
     form_data: dict,
@@ -1359,7 +1359,7 @@ async def download_file_stream(
                     hashed = calculate_sha256(file)
                     file.seek(0)
 
-                    url = f"{ollama_url}/api/blobs/sha256:{hashed}"
+                    url = f"{ollama_url}/chat/api/blobs/sha256:{hashed}"
                     response = requests.post(url, data=file)
 
                     if response.ok:
@@ -1454,13 +1454,13 @@ async def upload_model(
                     }
                     yield f"data: {json.dumps(data_msg)}\n\n"
 
-            # --- P3: Upload to ollama /api/blobs ---
+            # --- P3: Upload to ollama /chat/api/blobs ---
             with open(file_path, "rb") as f:
-                url = f"{ollama_url}/api/blobs/sha256:{file_hash}"
+                url = f"{ollama_url}/chat/api/blobs/sha256:{file_hash}"
                 response = requests.post(url, data=f)
 
             if response.ok:
-                log.info(f"Uploaded to /api/blobs")  # DEBUG
+                log.info(f"Uploaded to /chat/api/blobs")  # DEBUG
                 # Remove local file
                 os.remove(file_path)
 
@@ -1475,10 +1475,10 @@ async def upload_model(
                 }
                 log.info(f"Model Payload: {create_payload}")  # DEBUG
 
-                # Call ollama /api/create
+                # Call ollama /chat/api/create
                 # https://github.com/ollama/ollama/blob/main/docs/api.md#create-a-model
                 create_resp = requests.post(
-                    url=f"{ollama_url}/api/create",
+                    url=f"{ollama_url}/chat/api/create",
                     headers={"Content-Type": "application/json"},
                     data=json.dumps(create_payload),
                 )

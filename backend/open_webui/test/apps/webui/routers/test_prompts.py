@@ -3,7 +3,7 @@ from test.util.mock_user import mock_webui_user
 
 
 class TestPrompts(AbstractPostgresTest):
-    BASE_PATH = "/api/v1/prompts"
+    BASE_PATH = "/chat/api/v1/prompts"
 
     def test_prompts(self):
         # Get all prompts

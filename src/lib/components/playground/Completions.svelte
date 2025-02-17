@@ -52,7 +52,7 @@
 					}
 				]
 			},
-			`${WEBUI_BASE_URL}/api`
+			`${WEBUI_BASE_URL}/chat/api`
 		);
 
 		if (res && res.ok) {

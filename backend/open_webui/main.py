@@ -793,43 +793,51 @@ app.add_middleware(
 )
 
 
-app.mount("/ws", socket_app)
+app.mount("/chat/ws", socket_app)
 
 
-app.include_router(ollama.router, prefix="/ollama", tags=["ollama"])
-app.include_router(openai.router, prefix="/openai", tags=["openai"])
+app.include_router(ollama.router, prefix="/chat/ollama", tags=["ollama"])
+app.include_router(openai.router, prefix="/chat/openai", tags=["openai"])
 
 
-app.include_router(pipelines.router, prefix="/api/v1/pipelines", tags=["pipelines"])
-app.include_router(tasks.router, prefix="/api/v1/tasks", tags=["tasks"])
-app.include_router(images.router, prefix="/api/v1/images", tags=["images"])
-
-app.include_router(audio.router, prefix="/api/v1/audio", tags=["audio"])
-app.include_router(retrieval.router, prefix="/api/v1/retrieval", tags=["retrieval"])
-
-app.include_router(configs.router, prefix="/api/v1/configs", tags=["configs"])
-
-app.include_router(auths.router, prefix="/api/v1/auths", tags=["auths"])
-app.include_router(users.router, prefix="/api/v1/users", tags=["users"])
-
-
-app.include_router(channels.router, prefix="/api/v1/channels", tags=["channels"])
-app.include_router(chats.router, prefix="/api/v1/chats", tags=["chats"])
-
-app.include_router(models.router, prefix="/api/v1/models", tags=["models"])
-app.include_router(knowledge.router, prefix="/api/v1/knowledge", tags=["knowledge"])
-app.include_router(prompts.router, prefix="/api/v1/prompts", tags=["prompts"])
-app.include_router(tools.router, prefix="/api/v1/tools", tags=["tools"])
-
-app.include_router(memories.router, prefix="/api/v1/memories", tags=["memories"])
-app.include_router(folders.router, prefix="/api/v1/folders", tags=["folders"])
-app.include_router(groups.router, prefix="/api/v1/groups", tags=["groups"])
-app.include_router(files.router, prefix="/api/v1/files", tags=["files"])
-app.include_router(functions.router, prefix="/api/v1/functions", tags=["functions"])
 app.include_router(
-    evaluations.router, prefix="/api/v1/evaluations", tags=["evaluations"]
+    pipelines.router, prefix="/chat/api/v1/pipelines", tags=["pipelines"]
 )
-app.include_router(utils.router, prefix="/api/v1/utils", tags=["utils"])
+app.include_router(tasks.router, prefix="/chat/api/v1/tasks", tags=["tasks"])
+app.include_router(images.router, prefix="/chat/api/v1/images", tags=["images"])
+
+app.include_router(audio.router, prefix="/chat/api/v1/audio", tags=["audio"])
+app.include_router(
+    retrieval.router, prefix="/chat/api/v1/retrieval", tags=["retrieval"]
+)
+
+app.include_router(configs.router, prefix="/chat/api/v1/configs", tags=["configs"])
+
+app.include_router(auths.router, prefix="/chat/api/v1/auths", tags=["auths"])
+app.include_router(users.router, prefix="/chat/api/v1/users", tags=["users"])
+
+
+app.include_router(channels.router, prefix="/chat/api/v1/channels", tags=["channels"])
+app.include_router(chats.router, prefix="/chat/api/v1/chats", tags=["chats"])
+
+app.include_router(models.router, prefix="/chat/api/v1/models", tags=["models"])
+app.include_router(
+    knowledge.router, prefix="/chat/api/v1/knowledge", tags=["knowledge"]
+)
+app.include_router(prompts.router, prefix="/chat/api/v1/prompts", tags=["prompts"])
+app.include_router(tools.router, prefix="/chat/api/v1/tools", tags=["tools"])
+
+app.include_router(memories.router, prefix="/chat/api/v1/memories", tags=["memories"])
+app.include_router(folders.router, prefix="/chat/api/v1/folders", tags=["folders"])
+app.include_router(groups.router, prefix="/chat/api/v1/groups", tags=["groups"])
+app.include_router(files.router, prefix="/chat/api/v1/files", tags=["files"])
+app.include_router(
+    functions.router, prefix="/chat/api/v1/functions", tags=["functions"]
+)
+app.include_router(
+    evaluations.router, prefix="/chat/api/v1/evaluations", tags=["evaluations"]
+)
+app.include_router(utils.router, prefix="/chat/api/v1/utils", tags=["utils"])
 
 
 ##################################
@@ -839,7 +847,7 @@ app.include_router(utils.router, prefix="/api/v1/utils", tags=["utils"])
 ##################################
 
 
-@app.get("/api/models")
+@app.get("/chat/api/models")
 async def get_models(request: Request, user=Depends(get_verified_user)):
     def get_filtered_models(models, user):
         filtered_models = []
@@ -886,18 +894,18 @@ async def get_models(request: Request, user=Depends(get_verified_user)):
         models = get_filtered_models(models, user)
 
     log.debug(
-        f"/api/models returned filtered models accessible to the user: {json.dumps([model['id'] for model in models])}"
+        f"/chat/api/models returned filtered models accessible to the user: {json.dumps([model['id'] for model in models])}"
     )
     return {"data": models}
 
 
-@app.get("/api/models/base")
+@app.get("/chat/api/models/base")
 async def get_base_models(request: Request, user=Depends(get_admin_user)):
     models = await get_all_base_models(request)
     return {"data": models}
 
 
-@app.post("/api/chat/completions")
+@app.post("/chat/api/chat/completions")
 async def chat_completion(
     request: Request,
     form_data: dict,
@@ -986,7 +994,7 @@ generate_chat_completions = chat_completion
 generate_chat_completion = chat_completion
 
 
-@app.post("/api/chat/completed")
+@app.post("/chat/api/chat/completed")
 async def chat_completed(
     request: Request, form_data: dict, user=Depends(get_verified_user)
 ):
@@ -1005,7 +1013,7 @@ async def chat_completed(
         )
 
 
-@app.post("/api/chat/actions/{action_id}")
+@app.post("/chat/api/chat/actions/{action_id}")
 async def chat_action(
     request: Request, action_id: str, form_data: dict, user=Depends(get_verified_user)
 ):
@@ -1024,7 +1032,7 @@ async def chat_action(
         )
 
 
-@app.post("/api/tasks/stop/{task_id}")
+@app.post("/chat/api/tasks/stop/{task_id}")
 async def stop_task_endpoint(task_id: str, user=Depends(get_verified_user)):
     try:
         result = await stop_task(task_id)  # Use the function from tasks.py
@@ -1033,7 +1041,7 @@ async def stop_task_endpoint(task_id: str, user=Depends(get_verified_user)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
 
 
-@app.get("/api/tasks")
+@app.get("/chat/api/tasks")
 async def list_tasks_endpoint(user=Depends(get_verified_user)):
     return {"tasks": list_tasks()}  # Use the function from tasks.py
 
@@ -1045,7 +1053,7 @@ async def list_tasks_endpoint(user=Depends(get_verified_user)):
 ##################################
 
 
-@app.get("/api/config")
+@app.get("/chat/api/config")
 async def get_app_config(request: Request):
     user = None
     if "token" in request.cookies:
@@ -1138,28 +1146,28 @@ class UrlForm(BaseModel):
     url: str
 
 
-@app.get("/api/webhook")
+@app.get("/chat/api/webhook")
 async def get_webhook_url(user=Depends(get_admin_user)):
     return {
         "url": app.state.config.WEBHOOK_URL,
     }
 
 
-@app.post("/api/webhook")
+@app.post("/chat/api/webhook")
 async def update_webhook_url(form_data: UrlForm, user=Depends(get_admin_user)):
     app.state.config.WEBHOOK_URL = form_data.url
     app.state.WEBHOOK_URL = app.state.config.WEBHOOK_URL
     return {"url": app.state.config.WEBHOOK_URL}
 
 
-@app.get("/api/version")
+@app.get("/chat/api/version")
 async def get_app_version():
     return {
         "version": VERSION,
     }
 
 
-@app.get("/api/version/updates")
+@app.get("/chat/api/version/updates")
 async def get_app_latest_release_version(user=Depends(get_verified_user)):
     if OFFLINE_MODE:
         log.debug(
@@ -1182,7 +1190,7 @@ async def get_app_latest_release_version(user=Depends(get_verified_user)):
         return {"current": VERSION, "latest": VERSION}
 
 
-@app.get("/api/changelog")
+@app.get("/chat/api/changelog")
 async def get_app_changelog():
     return {key: CHANGELOG[key] for idx, key in enumerate(CHANGELOG) if idx < 5}
 

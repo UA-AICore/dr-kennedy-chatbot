@@ -21,7 +21,7 @@ def _assert_user(data, id, **kwargs):
 
 
 class TestUsers(AbstractPostgresTest):
-    BASE_PATH = "/api/v1/users"
+    BASE_PATH = "/chat/api/v1/users"
 
     def setup_class(cls):
         super().setup_class()

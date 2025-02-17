@@ -1604,7 +1604,7 @@
 						}
 					: {})
 			},
-			`${WEBUI_BASE_URL}/api`
+			`${WEBUI_BASE_URL}/chat/api`
 		).catch((error) => {
 			toast.error(`${error}`);
 

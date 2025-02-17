@@ -43,13 +43,13 @@ export const replaceTokens = (content, sourceIds, char, user) => {
 
 	// Replace video ID tags with corresponding <video> elements
 	content = content.replace(videoIdToken, (match, fileId) => {
-		const videoUrl = `${WEBUI_BASE_URL}/api/v1/files/${fileId}/content`;
+		const videoUrl = `${WEBUI_BASE_URL}/chat/api/v1/files/${fileId}/content`;
 		return `<video src="${videoUrl}" controls></video>`;
 	});
 
 	// Replace HTML ID tags with corresponding HTML content
 	content = content.replace(htmlIdToken, (match, fileId) => {
-		const htmlUrl = `${WEBUI_BASE_URL}/api/v1/files/${fileId}/content/html`;
+		const htmlUrl = `${WEBUI_BASE_URL}/chat/api/v1/files/${fileId}/content/html`;
 		return `<iframe src="${htmlUrl}" width="100%" frameborder="0" onload="this.style.height=(this.contentWindow.document.body.scrollHeight+20)+'px';"></iframe>`;
 	});
 

@@ -98,7 +98,7 @@
 					...messages
 				].filter((message) => message)
 			},
-			`${WEBUI_BASE_URL}/api`
+			`${WEBUI_BASE_URL}/chat/api`
 		);
 
 		let responseMessage;

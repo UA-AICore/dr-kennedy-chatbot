@@ -3,7 +3,7 @@ from test.util.mock_user import mock_webui_user
 
 
 class TestAuths(AbstractPostgresTest):
-    BASE_PATH = "/api/v1/auths"
+    BASE_PATH = "/chat/api/v1/auths"
 
     def setup_class(cls):
         super().setup_class()

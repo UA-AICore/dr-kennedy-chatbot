@@ -48,7 +48,7 @@ async def execute_code_jupyter(
 
     # Construct API URLs with authentication token if provided
     params = f"?token={token}" if token else ""
-    kernel_url = urljoin(jupyter_url, f"/api/kernels{params}")
+    kernel_url = urljoin(jupyter_url, f"/chat/api/kernels{params}")
 
     try:
         response = session.post(kernel_url, headers=headers, cookies=session.cookies)
@@ -57,7 +57,7 @@ async def execute_code_jupyter(
 
         websocket_url = urljoin(
             jupyter_url.replace("http", "ws"),
-            f"/api/kernels/{kernel_id}/channels{params}",
+            f"/chat/api/kernels/{kernel_id}/channels{params}",
         )
 
         ws_headers = {}

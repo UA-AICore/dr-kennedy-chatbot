@@ -23,7 +23,7 @@ def search_searchapi(
       api_key (str): A searchapi.io API key
       query (str): The query to search for
     """
-    url = "https://www.searchapi.io/api/v1/search"
+    url = "https://www.searchapi.io/chat/api/v1/search"
 
     engine = engine or "google"
 

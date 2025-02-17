@@ -21,7 +21,7 @@ def search_kagi(
         query (str): The query to search for
         count (int): The number of results to return
     """
-    url = "https://kagi.com/api/v0/search"
+    url = "https://kagi.com/chat/api/v0/search"
     headers = {
         "Authorization": f"Bot {api_key}",
     }

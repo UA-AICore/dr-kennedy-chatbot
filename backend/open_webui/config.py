@@ -615,7 +615,7 @@ CUSTOM_NAME = os.environ.get("CUSTOM_NAME", "")
 
 if CUSTOM_NAME:
     try:
-        r = requests.get(f"https://api.openwebui.com/api/v1/custom/{CUSTOM_NAME}")
+        r = requests.get(f"https://api.openwebui.com/chat/api/v1/custom/{CUSTOM_NAME}")
         data = r.json()
         if r.ok:
             if "logo" in data:

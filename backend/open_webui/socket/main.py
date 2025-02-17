@@ -116,7 +116,7 @@ async def periodic_usage_pool_cleanup():
 
 app = socketio.ASGIApp(
     sio,
-    socketio_path="/ws/socket.io",
+    socketio_path="/chat/ws/socket.io",
 )
 
 
