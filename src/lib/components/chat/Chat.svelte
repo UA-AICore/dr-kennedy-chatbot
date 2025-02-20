@@ -166,7 +166,7 @@
 				const chatInput = document.getElementById('chat-input');
 				chatInput?.focus();
 			} else {
-				await goto('/');
+				await goto('/chat/');
 			}
 		})();
 	}
@@ -399,7 +399,7 @@
 			});
 		} else {
 			if ($temporaryChatEnabled) {
-				await goto('/');
+				await goto('/chat/');
 			}
 		}
 
@@ -770,7 +770,7 @@
 	const loadChat = async () => {
 		chatId.set(chatIdProp);
 		chat = await getChatById(localStorage.token, $chatId).catch(async (error) => {
-			await goto('/');
+			await goto('/chat/');
 			return null;
 		});
 
@@ -1824,7 +1824,7 @@
 			await chats.set(await getChatList(localStorage.token, $currentChatPage));
 			currentChatPage.set(1);
 
-			window.history.replaceState(history.state, '', `/c/${_chatId}`);
+			window.history.replaceState(history.state, '', `/chat/c/${_chatId}`);
 		} else {
 			_chatId = 'local';
 			await chatId.set('local');

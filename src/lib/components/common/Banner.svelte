@@ -57,7 +57,7 @@
 						<div class="flex md:hidden group w-fit md:items-center">
 							<a
 								class="text-gray-700 dark:text-white text-xs font-semibold underline"
-								href="/assets/files/whitepaper.pdf"
+								href="/chat/assets/files/whitepaper.pdf"
 								target="_blank">Learn More</a
 							>
 
@@ -91,7 +91,7 @@
 				<div class="hidden md:flex group w-fit md:items-center">
 					<a
 						class="text-gray-700 dark:text-white text-xs font-semibold underline"
-						href="/"
+						href="/chat/"
 						target="_blank">Learn More</a
 					>
 

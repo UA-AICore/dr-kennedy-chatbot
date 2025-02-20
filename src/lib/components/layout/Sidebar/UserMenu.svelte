@@ -92,7 +92,7 @@
 			{#if role === 'admin'}
 				<a
 					class="flex rounded-md py-2 px-3 w-full hover:bg-gray-50 dark:hover:bg-gray-800 transition"
-					href="/playground"
+					href="/chat/playground"
 					on:click={() => {
 						show = false;
 
@@ -122,7 +122,7 @@
 
 				<a
 					class="flex rounded-md py-2 px-3 w-full hover:bg-gray-50 dark:hover:bg-gray-800 transition"
-					href="/admin"
+					href="/chat/admin"
 					on:click={() => {
 						show = false;
 

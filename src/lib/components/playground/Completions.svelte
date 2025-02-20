@@ -106,7 +106,7 @@
 
 	onMount(async () => {
 		if ($user?.role !== 'admin') {
-			await goto('/');
+			await goto('/chat/');
 		}
 
 		if ($settings?.models) {

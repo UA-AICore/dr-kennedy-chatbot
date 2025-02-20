@@ -529,7 +529,7 @@
 		if (res) {
 			knowledge = res;
 		} else {
-			goto('/workspace/knowledge');
+			goto('/chat/workspace/knowledge');
 		}
 
 		const dropZone = document.querySelector('body');

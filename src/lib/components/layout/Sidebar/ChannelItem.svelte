@@ -50,7 +50,7 @@
 >
 	<a
 		class=" w-full flex justify-between"
-		href="/channels/{channel.id}"
+		href="/chat/channels/{channel.id}"
 		on:click={() => {
 			if ($mobile) {
 				showSidebar.set(false);
